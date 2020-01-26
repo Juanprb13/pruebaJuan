@@ -24,6 +24,30 @@ const Pedido = {
             }
             res.status(200).json(result) 
         })
+    },
+    updatePedido : (req,res)=>{
+        console.log(req.params);
+        
+        const {id,address,date} = req.params
+
+        query.query('UPDATE pedido SET  direccionE= ?, Franja_horaria = ?  where id = ? ', [address,date,id],(err,result)=>{
+            if (err) {
+                throw err
+            }
+            res.status(200).json({message:'Datos actualizados correctamente'})
+        })
+    },
+    getPedido: (req,res)=>{
+        query.query('select * from pedido where id = ?',[req.params.id],(err,result)=>{
+            if (err) {
+                throw err
+            }            
+            if (result.length ==0) {
+                res.status(200).json({message:"El pedido que estas busacando no existe"})
+            }else{
+                res.status(200).json(result) 
+            }   
+        })
     }
 }
 module.exports = Pedido
