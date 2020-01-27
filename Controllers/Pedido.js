@@ -7,7 +7,6 @@ const Pedido = {
     getPedido: (req,res)=>{
         query.query('select pedido.id,fechaEntrega,desde,hasta,direccion_id ,nombre,apellido,telefono,email,direccion from pedido,direccion INNER JOIN usuario ON usuario.id = direccion.usuario_id ',(err,result)=>{
             if (err) {
-                console.log('error :'+err);
                 res.status(400).json({error:'Lo sentimos no se pudo realizar la operación'})
             }
             let data = []
@@ -49,7 +48,7 @@ const Pedido = {
         })
     },
     getPedidoById: (req,res)=>{
-        query.query('select * from pedido where id = ?',[req.params.id],(err,result)=>{
+        query.query('select pedido.id,fechaEntrega,desde,hasta,direccion_id ,nombre,apellido,telefono,email,direccion from pedido,direccion INNER JOIN usuario ON usuario.id = direccion.usuario_id  where pedido.id = ?',[req.params.id],(err,result)=>{
             if (err) {
                 throw err
             }            
