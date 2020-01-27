@@ -14,10 +14,11 @@ const Pedido = {
         })
     },
     storePedido:(req,res)=>{
-        const {direccionE,fechaEntrega,Franja_horaria} = req.body
-        console.log(direccionE,fechaEntrega,Franja_horaria);
+        const {fechaEntrega,Franja_horaria} = req.body
+        const {direccion} = req.params
+        console.log(direccionE,fechaEntrega,desde,hasta);
         
-        query.query('insert into pedido set ?',{direccionE:direccionE,fechaEntrega:fechaEntrega,Franja_horaria:Franja_horaria},(err,result)=>{
+        query.query('insert into pedido set ?',{fechaEntrega:fechaEntrega,desde:desde,hasta:hasta,direccion_id:direccion},(err,result)=>{
             if (err) {
                 res.status(400).json({error:'Lo sentimos no se pudo realizar la operación',err})
                 throw err;

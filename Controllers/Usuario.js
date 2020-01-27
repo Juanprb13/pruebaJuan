@@ -11,23 +11,52 @@ const Usuario = {
     },
     storeUsuario:(req,res)=>{
         const {nombre,apellido,telefono,email} = req.body
-        let newEmail = ''
-        query.query('SELECT email from usuario',[email],(err,result)=>{
+        let emailFlag = false
+        query.query('SELECT * from usuario where email = ?',[email],(err,result)=>{
             if (err) {
                 throw err
             }
-            if (result.lenght > 0) {
-                newEmail = result.email
+            if (result.length) {
+                emailFlag = true
             }
+            
         })
-
-        query.query('UPDATE  usuario  SET nombre = ? , apellido = ?,telefono = ?  ,email= ? ',[nombre,apellido,telefono,newEmail],(err,result)=>{
+        if (emailFlag == false) {
+            query.query('Insert  usuario  SET nombre = ? , apellido = ?,telefono = ?  ,email= ? ',[nombre,apellido,telefono,email],(err,result)=>{
+                if (err) {
+                    throw err
+                }
+                res.status(200).json({message:"Usuario creado correctamente"})
+            })
+            
+        }else{
+            res.status(200).json({message:"Este correo ya esta en uso"})
+        }
+    },
+    updateUsuario:(req,res)=>{
+        const {nombre,apellido,telefono,email} = req.body
+        
+        const {id } = req.params
+        let emailFlag = false
+        query.query('SELECT * from usuario where email = ?',[email],(err,result)=>{
             if (err) {
                 throw err
             }
-            res.status(200).json({message:"Usuario creado correctamente"},result.insertId)
+            if (result.length) {
+                emailFlag = true
+            }  
         })
-    }
+        if (emailFlag == false) {
+            query.query('UPDATE usuario    SET nombre = ? , apellido = ?,telefono = ?  ,email= ?  where id = ? ', [nombre,apellido,telefono,email,id],(err,result)=>{
+                if (err) {
+                    throw err
+                }
+                res.status(200).json({message:'Datos actualizados correctamente'})
+            })
+        }else{
+            res.status(200).json({message:"Este correo ya esta en uso"})
+        }
+    },
 }
 
 module.exports = Usuario
