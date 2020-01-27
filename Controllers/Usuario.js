@@ -14,7 +14,7 @@ const Usuario = {
         let emailFlag = false
         query.query('SELECT * from usuario where email = ?',[email],(err,result)=>{
             if (err) {
-                throw err
+                res.status(200).json({message:"Verifica que todos los campos hayan sido enviados"})
             }
             if (result.length) {
                 emailFlag = true
@@ -24,7 +24,7 @@ const Usuario = {
         if (emailFlag == false) {
             query.query('Insert  usuario  SET nombre = ? , apellido = ?,telefono = ?  ,email= ? ',[nombre,apellido,telefono,email],(err,result)=>{
                 if (err) {
-                    throw err
+                    res.status(500).json({message:"Verifica que todos los campos hayan sido enviados"})
                 }
                 res.status(200).json({message:"Usuario creado correctamente"})
             })

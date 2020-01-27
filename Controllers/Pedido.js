@@ -5,23 +5,33 @@ const query = require('../Database/connection')
 const Pedido = {
 
     getPedido: (req,res)=>{
-        query.query('select * from pedido',(err,result)=>{
+        query.query('select pedido.id,fechaEntrega,desde,hasta,direccion_id ,nombre,apellido,telefono,email,direccion from pedido,direccion INNER JOIN usuario ON usuario.id = direccion.usuario_id ',(err,result)=>{
             if (err) {
                 console.log('error :'+err);
                 res.status(400).json({error:'Lo sentimos no se pudo realizar la operación'})
             }
+            let data = []
+            // result.forEach((element,i) => {
+            //     let direccionID = element.direccion_id
+                
+            //     query.query('SELECT FROM direccion ',[direccionID],(err,response)=>{
+            //         if (err) {
+            //             res.status(200).json({message:"no hay direcciones asignadas"})
+            //         }
+            //         result[i].user =response                    
+            //     })
+            // });
+            console.log(result);     
             res.status(200).json(result)
         })
     },
     storePedido:(req,res)=>{
-        const {fechaEntrega,Franja_horaria} = req.body
+        const {fechaEntrega,desde,hasta} = req.body
         const {direccion} = req.params
-        console.log(direccionE,fechaEntrega,desde,hasta);
         
         query.query('insert into pedido set ?',{fechaEntrega:fechaEntrega,desde:desde,hasta:hasta,direccion_id:direccion},(err,result)=>{
             if (err) {
-                res.status(400).json({error:'Lo sentimos no se pudo realizar la operación',err})
-                throw err;
+                res.status(400).json({error:'Verifica que el id de la dirección exista y tambien el usuario'})
             }
             res.status(200).json(result) 
         })
@@ -38,7 +48,7 @@ const Pedido = {
             res.status(200).json({message:'Datos actualizados correctamente'})
         })
     },
-    getPedido: (req,res)=>{
+    getPedidoById: (req,res)=>{
         query.query('select * from pedido where id = ?',[req.params.id],(err,result)=>{
             if (err) {
                 throw err
